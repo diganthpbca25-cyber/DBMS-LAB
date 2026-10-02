@@ -1,0 +1,94 @@
+CREATE TABLE Student (
+    ID INT,
+    Name VARCHAR(20),
+    Marks INT
+);
+
+CREATE TABLE Log (
+    Message VARCHAR(50)
+);
+
+DELIMITER //
+
+CREATE TRIGGER before_insert
+BEFORE INSERT ON Student
+FOR EACH ROW
+BEGIN
+    IF NEW.Marks < 0 THEN
+        SET NEW.Marks = 0;
+    END IF;
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER after_insert
+AFTER INSERT ON Student
+FOR EACH ROW
+BEGIN
+    INSERT INTO Log VALUES ('Student Inserted');
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER before_update
+BEFORE UPDATE ON Student
+FOR EACH ROW
+BEGIN
+    IF NEW.Marks < 0 THEN
+        SET NEW.Marks = 0;
+    END IF;
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER after_update
+AFTER UPDATE ON Student
+FOR EACH ROW
+BEGIN
+    INSERT INTO Log VALUES ('Student Updated');
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER before_delete
+BEFORE DELETE ON Student
+FOR EACH ROW
+BEGIN
+    INSERT INTO Log VALUES ('Student Will Be Deleted');
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER after_delete
+AFTER DELETE ON Student
+FOR EACH ROW
+BEGIN
+    INSERT INTO Log VALUES ('Student Deleted');
+END //
+
+DELIMITER ;
+
+INSERT INTO Student VALUES (1, 'Diganth', 80);
+
+UPDATE Student
+SET Marks = 90
+WHERE ID = 1;
+
+DELETE FROM Student
+WHERE ID = 1;
+
+SELECT * FROM Log;
